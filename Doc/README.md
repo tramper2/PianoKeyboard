@@ -75,16 +75,13 @@
 
 ---
 
-## 📦 GitHub Pages 배포하기
+## 📦 GitHub Pages 배포하기 (deploy.ps1 활용)
 
-이 프로젝트는 정적 사이트이므로 GitHub Pages(`gh-pages` 브랜치)에 손쉽게 무료 호스팅 배포가 가능합니다.
+루트 디렉터리에 포함된 `deploy.ps1` 파워쉘 스크립트를 사용하여 GitHub 저장소 커밋과 GitHub Pages 배포를 한 번에 자동 처리할 수 있습니다.
 
-1. 저장소 설정 및 커밋:
-   ```bash
-   git init
-   git remote add origin git@github.com:tramper2/PianoKeyboard.git
-   git add .
-   git commit -m "Initial commit - PianoKeyboard v1.0"
+1. PowerShell 또는 터미널을 관리자 권한으로 열고 프로젝트 루트 `D:\Study\WebPage\PianoKeyboard`로 이동합니다.
+2. 다음 스크립트를 실행합니다:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\deploy.ps1
    ```
-2. 배포 자동화 도구 설치 및 스크립트 작성 (`gh-pages` 패키지 활용):
-   - 프로젝트 루트 디렉터리에 `package.json`을 추가하거나 `Source` 폴더 내용을 `gh-pages` 브랜치로 바로 푸시하여 배포할 수 있습니다.
+3. 스크립트가 실행되면 소스 코드가 `main` 브랜치에 저장되고, 실행 파일(`Source` 폴더 내용)만 `gh-pages` 브랜치에 독립적으로 업로드되어 웹에 즉시 배포됩니다.
