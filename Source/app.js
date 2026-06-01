@@ -149,6 +149,9 @@ class AppManager {
     if (modalCloseBtn && congratsModal) {
       modalCloseBtn.addEventListener("click", () => {
         congratsModal.classList.remove("show");
+        if (this.audioStarted) {
+          window.audioEngine.stopAll(); // Stop any hanging decays on close
+        }
         this.resetSong();
       });
     }
@@ -254,19 +257,23 @@ class AppManager {
       window.scoreRenderer.highlightNote(-1);
       window.keyboardManager.highlightTargetKey(null, false);
       
-      // Stop all sounds immediately
-      if (this.audioStarted) {
-        window.audioEngine.stopAll();
+      const isAutoplay = (this.currentMode === "autoplay");
+      if (isAutoplay) {
+        this.isPlaying = false;
+        if (this.autoplayTimeout) {
+          clearTimeout(this.autoplayTimeout);
+          this.autoplayTimeout = null;
+        }
       }
 
-      if (this.currentMode === "autoplay") {
-        this.stopAutoplay();
-      }
+      // Delay showing the modal so the last note can play for its full duration and decay naturally!
+      const delayTime = isAutoplay ? 1200 : 1800; // 1.2s for autoplay, 1.8s for practice mode
       
-      // Delay slightly to let rendering catch up, then show congrats modal (non-blocking)
       setTimeout(() => {
-        this.showCongratsModal();
-      }, 150);
+        if (this.playhead >= totalNotes) {
+          this.showCongratsModal();
+        }
+      }, delayTime);
       return;
     }
 
