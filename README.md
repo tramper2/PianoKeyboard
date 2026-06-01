@@ -85,3 +85,5 @@
    powershell -ExecutionPolicy Bypass -File .\deploy.ps1
    ```
 3. 스크립트가 실행되면 소스 코드가 `main` 브랜치에 저장되고, 실행 파일(`Source` 폴더 내용)만 `gh-pages` 브랜치에 독립적으로 업로드되어 웹에 즉시 배포됩니다.
+
+GitHub Pages 주소: https://tramper2.github.io/PianoKeyboard/

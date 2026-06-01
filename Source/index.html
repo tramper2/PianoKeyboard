@@ -39,11 +39,16 @@
       </div>
 
       <!-- Song Selector -->
-      <div class="form-group">
-        <label for="song-select">연주할 곡 선택</label>
-        <select id="song-select">
-          <!-- Options will be dynamically loaded from songs.js -->
-        </select>
+      <div class="form-group" style="display: flex; gap: 0.5rem; align-items: flex-end; flex-direction: row;">
+        <div style="flex-grow: 1;">
+          <label for="song-select">연주할 곡 선택</label>
+          <select id="song-select" style="width: 100%;">
+            <!-- Options will be dynamically loaded from songs.js -->
+          </select>
+        </div>
+        <button id="restart-btn" class="btn" style="height: 42px; padding: 0.6rem 1rem; white-space: nowrap;" title="처음부터 다시 연주">
+          🔄 다시 시작
+        </button>
       </div>
 
       <!-- Mode Selector -->
