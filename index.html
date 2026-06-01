@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PianoKeyboard - 컴퓨터 키보드로 연주하는 타이핑 피아노</title>
+  <meta name="description" content="컴퓨터 키보드로 피아노를 쉽게 연주해 보세요! 악보의 음표 머리에 표시된 키를 그대로 타이핑하며 재미있게 배우는 피아노 학습 웹앱.">
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- CDNs for External Music Libraries -->
+  <!-- Tone.js for web audio synth -->
+  <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
+  <!-- @tonejs/midi for MIDI file parsing -->
+  <script src="https://unpkg.com/@tonejs/midi"></script>
+  <!-- VexFlow for rendering vector sheet music -->
+  <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js"></script>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      PianoKeyboard <span>BETA</span>
+    </div>
+    <div class="controls-header">
+      <button id="start-audio-btn" class="btn btn-primary">
+        🎵 오디오 시작하기
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left Sidebar: Settings and Controls -->
+    <aside class="glass-panel">
+      <div>
+        <h3 class="panel-title">설정 및 옵션</h3>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.4;">
+          악보와 악기 설정을 변경하여 맞춤형 연주를 경험해 보세요.
+        </p>
+      </div>
+
+      <!-- Song Selector -->
+      <div class="form-group">
+        <label for="song-select">연주할 곡 선택</label>
+        <select id="song-select">
+          <!-- Options will be dynamically loaded from songs.js -->
+        </select>
+      </div>
+
+      <!-- Mode Selector -->
+      <div class="form-group">
+        <label>연주 모드</label>
+        <div class="mode-selector">
+          <button class="mode-btn active" data-mode="practice">
+            <span class="mode-icon">🎯</span>
+            <div class="mode-desc">
+              <span>연습 모드</span>
+              <span>올바른 키를 입력할 때까지 악보가 대기합니다.</span>
+            </div>
+          </button>
+          <button class="mode-btn" data-mode="autoplay">
+            <span class="mode-icon">⚡</span>
+            <div class="mode-desc">
+              <span>자동 연주</span>
+              <span>곡의 템포에 맞춰 자동으로 악보가 진행됩니다.</span>
+            </div>
+          </button>
+          <button class="mode-btn" data-mode="freeplay">
+            <span class="mode-icon">🎹</span>
+            <div class="mode-desc">
+              <span>자유 연주</span>
+              <span>악보 구애 없이 자유롭게 키보드로 연주합니다.</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Keyboard Layout Selector -->
+      <div class="form-group">
+        <label>키보드 자판 표기</label>
+        <div class="mapping-toggle">
+          <div class="toggle-option active" data-layout="ko">한글 자판 (ㄱㄴㄷ)</div>
+          <div class="toggle-option" data-layout="en">영어 자판 (QWERTY)</div>
+        </div>
+      </div>
+
+      <!-- Instrument sound selector -->
+      <div class="form-group">
+        <label for="sound-select">악기 음색</label>
+        <select id="sound-select">
+          <option value="piano">어쿠스틱 피아노 (Acoustic Synth)</option>
+          <option value="organ">파이프 오르간 (Pipe Organ)</option>
+          <option value="synth">사이버 신디사이저 (FM Synth)</option>
+          <option value="sine">기본 사인파 (Pure Sine)</option>
+        </select>
+      </div>
+
+      <!-- Custom MIDI file Uploader -->
+      <div class="form-group">
+        <label>커스텀 악보 업로드</label>
+        <div class="upload-area" id="drop-zone">
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">
+            여기에 MIDI 파일을 끌어다 놓거나 <strong>클릭하여 업로드</strong>하세요. (.mid, .midi)
+          </p>
+          <input type="file" id="midi-upload" accept=".mid,.midi">
+        </div>
+      </div>
+      
+      <div style="margin-top: auto; display: flex; align-items: center; justify-content: space-between;">
+        <span style="font-size: 0.8rem; color: var(--text-secondary);">상태:</span>
+        <span id="status-indicator" class="status-badge error">오디오 미연결</span>
+      </div>
+    </aside>
+
+    <!-- Right Area: Sheet Music & Virtual Piano -->
+    <section class="score-container">
+      
+      <!-- Tutorial Banner -->
+      <div class="info-banner">
+        💡 <strong>이용 방법:</strong> 먼저 상단의 <strong>[🎵 오디오 시작하기]</strong> 버튼을 클릭하세요! 
+        악보의 둥근 음표 머리 안에 표시된 키(예: <code>ㄱ</code>, <code>ㅅ</code>, <code>8</code> 등)를 컴퓨터 키보드로 타이핑하면 피아노 소리와 함께 연주가 진행됩니다. 
+        검은색 건반은 <strong>Shift + 키</strong>를 함께 누르시면 됩니다!
+      </div>
+
+      <!-- Sheet Music SVG Container -->
+      <div class="sheet-music-wrapper">
+        <div id="sheet-music-render"></div>
+      </div>
+
+      <!-- Visual Virtual Keyboard -->
+      <div class="keyboard-container" id="piano-keyboard-render">
+        <!-- Rendered dynamically by keyboard.js -->
+      </div>
+
+      <!-- Info Helper Cards -->
+      <div class="mapping-helper">
+        <div class="helper-card">
+          <h4>🎹 옥타브 3 (낮은음)</h4>
+          <div class="helper-grid">
+            <span>ㅂ ㅈ ㄷ</span>
+            <span>솔(G3) 라(A3) 시(B3)</span>
+            <span>Shift 조합</span>
+            <span>ㅃ(G#3) ㅉ(A#3)</span>
+          </div>
+        </div>
+        <div class="helper-card">
+          <h4>🎹 옥타브 4 (가운데음)</h4>
+          <div class="helper-grid">
+            <span>ㄱ ㅅ ㅛ ㅕ ㅑ ㅐ ㅔ</span>
+            <span>도(C4) 레(D4) 미(E4) 파(F4) 솔(G4) 라(A4) 시(B4)</span>
+            <span>Shift 조합</span>
+            <span>ㄲ(C#4) ㅆ(D#4) ㅕ*(F#4) ㅑ*(G#4) ㅒ(A#4)</span>
+          </div>
+        </div>
+        <div class="helper-card">
+          <h4>🎹 옥타브 5 (높은음)</h4>
+          <div class="helper-grid">
+            <span>7 8 9 0 - =</span>
+            <span>도(C5) 레(D5) 미(E5) 파(F5) 솔(G5) 라(A5)</span>
+            <span>Shift 조합</span>
+            <span>&(C#5) *(D#5) )(F#5) _(G#5) +(A#5)</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      © 2026 PianoKeyboard. Built with HTML5, Vanilla CSS, VexFlow & Tone.js. 
+      Deployed to <a href="https://tramper2.github.io/PianoKeyboard/" target="_blank">GitHub Pages</a>.
+    </p>
+  </footer>
+
+  <!-- Local Script Dependencies -->
+  <script src="songs.js"></script>
+  <script src="keyboard.js"></script>
+  <script src="audio.js"></script>
+  <script src="vexflow_helper.js"></script>
+  <script src="midi_parser.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,548 @@
+/* style.css - PianoKeyboard Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;600;700&display=swap');
+
+:root {
+  --bg-color: #0b0f19;
+  --panel-bg: rgba(17, 24, 39, 0.7);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --accent-color: #8b5cf6; /* Violet */
+  --accent-glow: rgba(139, 92, 246, 0.4);
+  --success-color: #10b981; /* Green */
+  --success-glow: rgba(16, 185, 129, 0.4);
+  --warning-color: #f59e0b; /* Amber */
+  --key-white-bg: #fdfdfd;
+  --key-white-active: #e2e8f0;
+  --key-black-bg: #1e293b;
+  --key-black-active: #0f172a;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+}
+
+header {
+  width: 100%;
+  max-width: 1200px;
+  padding: 2rem 1.5rem 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a78bfa, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: -0.05em;
+}
+
+.logo span {
+  font-size: 1.2rem;
+  font-weight: 400;
+  padding: 0.2rem 0.6rem;
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 9999px;
+  color: #c084fc;
+}
+
+.controls-header {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--panel-border);
+  color: var(--text-primary);
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  border: none;
+  box-shadow: 0 4px 14px var(--accent-glow);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-danger {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+main {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 1.5rem 2rem 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  flex-grow: 1;
+}
+
+@media (min-width: 1024px) {
+  main {
+    grid-template-columns: 320px 1fr;
+  }
+}
+
+.glass-panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.panel-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--panel-border);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+select, input[type="file"] {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--panel-border);
+  border-radius: 0.75rem;
+  color: var(--text-primary);
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+select:focus, input[type="file"]:focus {
+  border-color: var(--accent-color);
+}
+
+.mode-selector {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+
+.mode-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--panel-border);
+  border-radius: 0.75rem;
+  color: var(--text-secondary);
+  padding: 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mode-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+
+.mode-btn.active {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: var(--accent-color);
+  color: #c084fc;
+}
+
+.mode-btn .mode-icon {
+  font-size: 1.2rem;
+}
+
+.mode-btn .mode-desc {
+  display: flex;
+  flex-direction: column;
+}
+
+.mode-btn .mode-desc span:first-child {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.mode-btn .mode-desc span:last-child {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.mapping-toggle {
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--panel-border);
+  border-radius: 0.75rem;
+  padding: 0.25rem;
+}
+
+.toggle-option {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.toggle-option.active {
+  background: var(--accent-color);
+  color: white;
+}
+
+.score-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.sheet-music-wrapper {
+  background: white; /* VexFlow default renders best on light background */
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  overflow-x: auto;
+  position: relative;
+}
+
+/* Custom overlay SVG on top of VexFlow sheet music */
+.svg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Scrollable container for long sheet music */
+#sheet-music-render {
+  width: 100%;
+  min-width: 800px;
+}
+
+.keyboard-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+  position: relative;
+}
+
+.piano {
+  display: flex;
+  position: relative;
+  height: 180px;
+  background: #000;
+  padding: 5px 5px 0 5px;
+  border-radius: 0.75rem;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+  user-select: none;
+}
+
+.piano-key {
+  position: relative;
+  cursor: pointer;
+  transition: filter 0.1s;
+}
+
+.piano-key.white {
+  width: 38px;
+  height: 170px;
+  background: var(--key-white-bg);
+  border: 1px solid #d1d5db;
+  border-radius: 0 0 4px 4px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 0.75rem;
+}
+
+.piano-key.black {
+  width: 22px;
+  height: 105px;
+  background: var(--key-black-bg);
+  border: 1px solid #000;
+  border-radius: 0 0 3px 3px;
+  margin-left: -11px;
+  margin-right: -11px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 0.5rem;
+}
+
+.key-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  pointer-events: none;
+}
+
+.piano-key.white .key-label {
+  color: #4b5563;
+}
+
+.piano-key.black .key-label {
+  color: #e2e8f0;
+}
+
+.piano-key.white.active {
+  background: linear-gradient(to bottom, var(--key-white-active) 0%, #cbd5e1 100%);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.2), 0 0 15px var(--accent-glow);
+  transform: translateY(1px);
+}
+
+.piano-key.black.active {
+  background: linear-gradient(to bottom, var(--key-black-active) 0%, #1e293b 100%);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 0 15px var(--accent-glow);
+  transform: translateY(1px);
+}
+
+.piano-key.highlight-target {
+  box-shadow: 0 0 12px 3px var(--success-color);
+}
+
+.piano-key.white.highlight-target {
+  background: #d1fae5;
+}
+
+.piano-key.black.highlight-target {
+  background: #065f46;
+}
+
+.key-secondary-label {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.piano-key.black .key-secondary-label {
+  color: #64748b;
+}
+
+.mapping-helper {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.helper-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--panel-border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.helper-card h4 {
+  font-size: 0.95rem;
+  color: #c084fc;
+  margin-bottom: 0.5rem;
+}
+
+.helper-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.helper-grid span:nth-child(odd) {
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
+.helper-grid span:nth-child(even) {
+  color: var(--text-secondary);
+}
+
+footer {
+  width: 100%;
+  max-width: 1200px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--panel-border);
+  margin-top: 2rem;
+}
+
+footer a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Custom CSS classes for VexFlow overlay SVG nodes */
+.overlay-notehead-group {
+  transition: all 0.2s ease;
+}
+
+.overlay-notehead-group.active circle {
+  fill: var(--success-color);
+  stroke: var(--success-color);
+  box-shadow: 0 0 10px var(--success-glow);
+}
+
+.overlay-notehead-group.active text {
+  fill: #000;
+  font-weight: 800;
+}
+
+.overlay-notehead-group.error circle {
+  fill: #ef4444;
+  stroke: #ef4444;
+}
+
+/* Custom layout properties */
+.upload-area {
+  border: 2px dashed var(--panel-border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.upload-area:hover {
+  border-color: var(--accent-color);
+}
+
+.upload-area input {
+  display: none;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-badge.ready {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+}
+
+.status-badge.error {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+.status-badge.loading {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fde047;
+}
+
+.info-banner {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #c084fc;
+  margin-bottom: 1rem;
+}
+
+.info-banner strong {
+  color: var(--text-primary);
+}
