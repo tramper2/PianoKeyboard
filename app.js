@@ -61,6 +61,14 @@ class AppManager {
       });
     }
 
+    // Restart Song Button
+    const restartBtn = document.getElementById("restart-btn");
+    if (restartBtn) {
+      restartBtn.addEventListener("click", () => {
+        this.restartSong();
+      });
+    }
+
     // Mode Selection Click
     const modeButtons = document.querySelectorAll(".mode-btn");
     modeButtons.forEach(btn => {
@@ -254,6 +262,18 @@ class AppManager {
     this.playhead = 0;
     this.skipRestsAndForward();
     this.updateHighlightState();
+  }
+
+  restartSong() {
+    const wasPlaying = this.isPlaying;
+    this.stopAutoplay();
+    this.playhead = 0;
+    this.skipRestsAndForward();
+    this.updateHighlightState();
+    
+    if (this.currentMode === "autoplay" && wasPlaying) {
+      this.startAutoplay();
+    }
   }
 
   /**
