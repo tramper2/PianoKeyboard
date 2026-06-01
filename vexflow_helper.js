@@ -232,13 +232,13 @@ class ScoreRenderer {
         // Look up corresponding computer keyboard character
         const char = window.keyboardManager.getNoteChar(pitch);
 
-        // Black noteheads with white text, except 4분음표 (duration 'q') which are white noteheads with black text
+        // Black noteheads with white text, except 온음표(w) and 2분음표(h) which are white noteheads with black text
         let fillBg = "#111827"; // Black
         let textCol = "#ffffff"; // White
         let strokeCol = "#111827";
 
-        if (noteInfo.duration === "q") {
-          fillBg = "#ffffff"; // White for 4분음표
+        if (noteInfo.duration === "w" || noteInfo.duration === "h") {
+          fillBg = "#ffffff"; // White for 온음표/2분음표
           textCol = "#111827"; // Black text
           strokeCol = "#111827";
         }
