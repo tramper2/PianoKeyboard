@@ -269,6 +269,19 @@ class ScoreRenderer {
       el.classList.remove("error");
     });
 
+    // Handle playhead line
+    let playheadLine = document.getElementById("playhead-line");
+    if (!playheadLine && this.overlayGroup) {
+      playheadLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      playheadLine.setAttribute("id", "playhead-line");
+      playheadLine.setAttribute("stroke", "#ef4444"); // Red
+      playheadLine.setAttribute("stroke-width", "2.5");
+      playheadLine.setAttribute("stroke-linecap", "round");
+      // Add subtle glow to the red line
+      playheadLine.setAttribute("style", "filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.7)); transition: all 0.15s ease-out;");
+      this.overlayGroup.appendChild(playheadLine);
+    }
+
     if (activeIndex >= 0 && activeIndex < this.renderedNotes.length) {
       const activeGroup = document.getElementById(`notehead-group-${activeIndex}`);
       if (activeGroup) {
@@ -279,6 +292,19 @@ class ScoreRenderer {
         const noteHeads = staveNote.getNoteHeads ? staveNote.getNoteHeads() : staveNote.noteHeads;
         if (noteHeads && noteHeads[0]) {
           const noteX = noteHeads[0].getAbsoluteX();
+          
+          // Update vertical red line position
+          const stave = staveNote.getStave();
+          if (stave && playheadLine) {
+            const topY = stave.getYForLine(0) - 15;
+            const bottomY = stave.getYForLine(4) + 15;
+            playheadLine.setAttribute("x1", noteX);
+            playheadLine.setAttribute("y1", topY);
+            playheadLine.setAttribute("x2", noteX);
+            playheadLine.setAttribute("y2", bottomY);
+            playheadLine.setAttribute("opacity", "1");
+          }
+
           const wrapper = document.querySelector(".sheet-music-wrapper");
           if (wrapper) {
             const scrollTarget = noteX - wrapper.clientWidth / 2;
@@ -288,6 +314,11 @@ class ScoreRenderer {
             });
           }
         }
+      }
+    } else {
+      // Hide playhead line if inactive
+      if (playheadLine) {
+        playheadLine.setAttribute("opacity", "0");
       }
     }
   }
