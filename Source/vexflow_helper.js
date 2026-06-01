@@ -232,13 +232,24 @@ class ScoreRenderer {
         // Look up corresponding computer keyboard character
         const char = window.keyboardManager.getNoteChar(pitch);
 
+        // Black noteheads with white text, except 4분음표 (duration 'q') which are white noteheads with black text
+        let fillBg = "#111827"; // Black
+        let textCol = "#ffffff"; // White
+        let strokeCol = "#111827";
+
+        if (noteInfo.duration === "q") {
+          fillBg = "#ffffff"; // White for 4분음표
+          textCol = "#111827"; // Black text
+          strokeCol = "#111827";
+        }
+
         // Create Circle
         const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circle.setAttribute("cx", x);
         circle.setAttribute("cy", y);
         circle.setAttribute("r", "11");
-        circle.setAttribute("fill", getPitchColor(pitch));
-        circle.setAttribute("stroke", "#111827");
+        circle.setAttribute("fill", fillBg);
+        circle.setAttribute("stroke", strokeCol);
         circle.setAttribute("stroke-width", "1.5");
         noteGroup.appendChild(circle);
 
@@ -248,7 +259,7 @@ class ScoreRenderer {
         text.setAttribute("y", y + 0.5); // Micro adjustment for vertical centering
         text.setAttribute("text-anchor", "middle");
         text.setAttribute("dominant-baseline", "central");
-        text.setAttribute("fill", "#ffffff");
+        text.setAttribute("fill", textCol);
         text.setAttribute("font-family", "'Outfit', sans-serif");
         text.setAttribute("font-weight", "800");
         text.setAttribute("font-size", "11px");
@@ -272,14 +283,19 @@ class ScoreRenderer {
     // Handle playhead line
     let playheadLine = document.getElementById("playhead-line");
     if (!playheadLine && this.overlayGroup) {
-      playheadLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      playheadLine.setAttribute("id", "playhead-line");
-      playheadLine.setAttribute("stroke", "#ef4444"); // Red
-      playheadLine.setAttribute("stroke-width", "2.5");
-      playheadLine.setAttribute("stroke-linecap", "round");
-      // Add subtle glow to the red line
-      playheadLine.setAttribute("style", "filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.7)); transition: all 0.15s ease-out;");
-      this.overlayGroup.appendChild(playheadLine);
+      const svgEl = document.querySelector(`#${this.divId} svg`);
+      if (svgEl) {
+        playheadLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        playheadLine.setAttribute("id", "playhead-line");
+        playheadLine.setAttribute("stroke", "#ef4444"); // Red
+        playheadLine.setAttribute("stroke-width", "2.5");
+        playheadLine.setAttribute("stroke-linecap", "round");
+        // Add subtle glow to the red line
+        playheadLine.setAttribute("style", "filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.7)); transition: all 0.15s ease-out;");
+        
+        // Insert as the very first child of the SVG element to render behind everything!
+        svgEl.insertBefore(playheadLine, svgEl.firstChild);
+      }
     }
 
     if (activeIndex >= 0 && activeIndex < this.renderedNotes.length) {
