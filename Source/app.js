@@ -142,6 +142,27 @@ class AppManager {
         }
       });
     }
+
+    // Modal Close Button click handler
+    const modalCloseBtn = document.getElementById("modal-close-btn");
+    const congratsModal = document.getElementById("congrats-modal");
+    if (modalCloseBtn && congratsModal) {
+      modalCloseBtn.addEventListener("click", () => {
+        congratsModal.classList.remove("show");
+        this.resetSong();
+      });
+    }
+
+    // Reset all notes on window focus loss to prevent stuck audio sustain
+    window.addEventListener("blur", () => {
+      if (this.audioStarted) {
+        window.audioEngine.stopAll();
+      }
+      if (window.keyboardManager) {
+        window.keyboardManager.activeCodes.clear();
+        document.querySelectorAll(".piano-key").forEach(k => k.classList.remove("active"));
+      }
+    });
   }
 
   async startAudio() {
@@ -233,15 +254,19 @@ class AppManager {
       window.scoreRenderer.highlightNote(-1);
       window.keyboardManager.highlightTargetKey(null, false);
       
+      // Stop all sounds immediately
+      if (this.audioStarted) {
+        window.audioEngine.stopAll();
+      }
+
       if (this.currentMode === "autoplay") {
         this.stopAutoplay();
       }
       
-      // Delay alert slightly to let rendering catch up
+      // Delay slightly to let rendering catch up, then show congrats modal (non-blocking)
       setTimeout(() => {
-        alert("🎉 완곡을 축하합니다! 참 잘하셨어요.");
-        this.resetSong();
-      }, 300);
+        this.showCongratsModal();
+      }, 150);
       return;
     }
 
@@ -262,6 +287,16 @@ class AppManager {
     this.playhead = 0;
     this.skipRestsAndForward();
     this.updateHighlightState();
+  }
+
+  showCongratsModal() {
+    const congratsModal = document.getElementById("congrats-modal");
+    if (congratsModal) {
+      congratsModal.classList.add("show");
+    } else {
+      alert("🎉 완곡을 축하합니다! 참 잘하셨어요.");
+      this.resetSong();
+    }
   }
 
   restartSong() {
